@@ -1,0 +1,39 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TracerLib", "TracerLib", "{12A4A416-F051-4E5C-A487-2E98581077BF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TracerLib", "TracerLib\TracerLib.csproj", "{3C3A704D-2922-4E12-90D9-347A33D16E94}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TracerLib.Tests", "TracerLib.Tests", "{ED3B19AA-ABA1-45B6-B40E-FDE4366456DA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DemoApp", "DemoApp", "{198F0485-7B03-4CB5-8356-AAFC41B59B97}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoApp", "DemoApp\DemoApp.csproj", "{FF2B9188-957B-450C-BE71-638B13F145AA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TracerLib.Tests", "TracerLib.Tests\TracerLib.Tests.csproj", "{1AB4156B-07C2-471C-8B5E-14C6D44365B8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{3C3A704D-2922-4E12-90D9-347A33D16E94} = {12A4A416-F051-4E5C-A487-2E98581077BF}
+		{FF2B9188-957B-450C-BE71-638B13F145AA} = {198F0485-7B03-4CB5-8356-AAFC41B59B97}
+		{1AB4156B-07C2-471C-8B5E-14C6D44365B8} = {ED3B19AA-ABA1-45B6-B40E-FDE4366456DA}
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3C3A704D-2922-4E12-90D9-347A33D16E94}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C3A704D-2922-4E12-90D9-347A33D16E94}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3C3A704D-2922-4E12-90D9-347A33D16E94}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3C3A704D-2922-4E12-90D9-347A33D16E94}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF2B9188-957B-450C-BE71-638B13F145AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF2B9188-957B-450C-BE71-638B13F145AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF2B9188-957B-450C-BE71-638B13F145AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF2B9188-957B-450C-BE71-638B13F145AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1AB4156B-07C2-471C-8B5E-14C6D44365B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1AB4156B-07C2-471C-8B5E-14C6D44365B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1AB4156B-07C2-471C-8B5E-14C6D44365B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1AB4156B-07C2-471C-8B5E-14C6D44365B8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
