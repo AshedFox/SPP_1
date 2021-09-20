@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using TracerLib.Serialization;
@@ -38,13 +39,24 @@ namespace DemoApp
         {
             _tracer.StartTrace();
 
+            var events = new List<WaitHandle>();
+
             for (int i = 0; i < 2; i++)
-            {
-                ThreadPool.QueueUserWorkItem(state => _demoClass2.DemoMethod2());
+            {   
+                var resetEvent = new ManualResetEvent(false);
+                ThreadPool.QueueUserWorkItem(
+                    _ =>
+                    {
+                        _demoClass2.DemoMethod2();
+                        resetEvent.Set();
+                    });
+                events.Add(resetEvent);
             }
 
             _demoClass2.DemoMethod2(); _demoClass2.DemoMethod2();
-
+            
+            
+            WaitHandle.WaitAll(events.ToArray());
             _tracer.StopTrace();
         }
     }

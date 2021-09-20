@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
+using System.Threading;
 using TracerLib.Tracers;
 using Xunit;
 
@@ -48,8 +49,8 @@ namespace TracerLib.Tests
             testClass.TestMethod1();
 
             var result = tracer.GetTraceResult();
-            Assert.True(result.ThreadsInfo.Count == 1);
-            Assert.True(result.ThreadsInfo[0].Methods.Count == 1);
+            Assert.Single(result.ThreadsInfo);
+            Assert.Single(result.ThreadsInfo[0].Methods);
         }
         
         [Fact]
@@ -73,8 +74,8 @@ namespace TracerLib.Tests
             testClass.TestMethod1();
 
             var result = tracer.GetTraceResult();
-            Assert.True(result.ThreadsInfo[0].Methods[0].Name == nameof(testClass.TestMethod1));
-            Assert.True(result.ThreadsInfo[0].Methods[0].Class == nameof(TestClass));
+            Assert.Equal(nameof(testClass.TestMethod1), result.ThreadsInfo[0].Methods[0].Name);
+            Assert.Equal(nameof(TestClass), result.ThreadsInfo[0].Methods[0].Class);
         }
         
         [Fact]
@@ -85,9 +86,9 @@ namespace TracerLib.Tests
             testClass.TestMethod2();
 
             var result = tracer.GetTraceResult();
-            Assert.True(result.ThreadsInfo.Count == 1);
-            Assert.True(result.ThreadsInfo[0].Methods.Count == 1);
-            Assert.True(result.ThreadsInfo[0].Methods[0].Methods.Count == 1);
+            Assert.Single(result.ThreadsInfo);
+            Assert.Single(result.ThreadsInfo[0].Methods);
+            Assert.Single(result.ThreadsInfo[0].Methods[0].Methods);
         }
         
         [Fact]
@@ -98,10 +99,10 @@ namespace TracerLib.Tests
             testClass.TestMethod2();
 
             var result = tracer.GetTraceResult();
-            Assert.True(result.ThreadsInfo[0].Methods[0].Name == nameof(testClass.TestMethod2));
-            Assert.True(result.ThreadsInfo[0].Methods[0].Class == nameof(testClass));
-            Assert.True(result.ThreadsInfo[0].Methods[0].Methods[0].Name == nameof(testClass.TestMethod1));
-            Assert.True(result.ThreadsInfo[0].Methods[0].Methods[0].Class == nameof(testClass));
+            Assert.Equal(nameof(testClass.TestMethod2), result.ThreadsInfo[0].Methods[0].Name);
+            Assert.Equal(nameof(TestClass), result.ThreadsInfo[0].Methods[0].Class);
+            Assert.Equal(nameof(testClass.TestMethod1), result.ThreadsInfo[0].Methods[0].Methods[0].Name);
+            Assert.Equal(nameof(TestClass), result.ThreadsInfo[0].Methods[0].Methods[0].Class);
         }
         
         [Fact]
@@ -129,16 +130,24 @@ namespace TracerLib.Tests
         {
             var tracer = new Tracer();
             var testClass = new TestClass(tracer);
+            
+            var events = new List<WaitHandle>();
+
             for (int i = 0; i < countOfThreads; i++)
-            {
-                ThreadPool.QueueUserWorkItem(_ =>
-                {
-                    testClass.TestMethod1();
-                });
+            {   
+                var resetEvent = new ManualResetEvent(false);
+                ThreadPool.QueueUserWorkItem(
+                    _ =>
+                    {
+                        testClass.TestMethod1();
+                        resetEvent.Set();
+                    });
+                events.Add(resetEvent);
             }
+            WaitHandle.WaitAll(events.ToArray());
 
             var result = tracer.GetTraceResult();
-            Assert.True(result.ThreadsInfo.Count == countOfThreads);
+            Assert.Equal(countOfThreads, result.ThreadsInfo.Count);
         }
     }
 }
