@@ -1,5 +1,4 @@
 ﻿using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using TracerLib.Models;
@@ -8,8 +7,8 @@ namespace TracerLib.Tracers
 {
     public class ThreadTracer
     {
-        public ConcurrentStack<MethodTracer> MethodsTraces { get; set; } = new();
-        public ConcurrentStack<MethodInfo> MethodsInfo { get; set; } = new();
+        public ConcurrentStack<MethodTracer> MethodsTraces { get; init; } = new();
+        public ConcurrentStack<MethodInfo> MethodsInfo { get; init; } = new();
         public MethodTracer CurrentMethodTracer { get; set; }
 
         public void StartTrace()
@@ -20,17 +19,16 @@ namespace TracerLib.Tracers
             }
 
             CurrentMethodTracer = new MethodTracer();
-            CurrentMethodTracer.StartTrace();
+            CurrentMethodTracer.Stopwatch.Start();
         }
 
-        public void StopTrace()
+        public void StopTrace(StackFrame stackFrame)
         {
-            CurrentMethodTracer.StopTrace();
-            var stackTrace = new StackTrace();
+            CurrentMethodTracer.Stopwatch.Stop();
             var methodInfo = new MethodInfo()
             {
-                Name = stackTrace.GetFrame(2)?.GetMethod()?.Name,
-                Class = stackTrace.GetFrame(2)?.GetMethod()?.ReflectedType?.Name,
+                Name = stackFrame.GetMethod()?.Name,
+                Class = stackFrame.GetMethod()?.ReflectedType?.Name,
                 ElapsedMilliseconds = CurrentMethodTracer.Stopwatch.ElapsedMilliseconds,
                 Methods = CurrentMethodTracer.Methods.ToList()
             };
@@ -42,9 +40,11 @@ namespace TracerLib.Tracers
             }
             else
             {
-                MethodsTraces.TryPop(out var methodTrace);
-                CurrentMethodTracer = methodTrace;
-                CurrentMethodTracer!.AddMethod(methodInfo);
+                if (MethodsTraces.TryPop(out var methodTrace))
+                {
+                    CurrentMethodTracer = methodTrace;
+                    CurrentMethodTracer.AddMethod(methodInfo);
+                }
             }
         }
     }

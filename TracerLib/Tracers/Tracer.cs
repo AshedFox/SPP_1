@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using TracerLib.Models;
@@ -25,7 +26,7 @@ namespace TracerLib.Tracers
             var threadId = Thread.CurrentThread.ManagedThreadId;
             if (_threadsTrace.TryGetValue(threadId, out var threadTrace))
             {
-                threadTrace.StopTrace();
+                threadTrace.StopTrace(new StackTrace().GetFrame(1));
             }
         }
 

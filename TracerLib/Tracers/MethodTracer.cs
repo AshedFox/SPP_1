@@ -7,18 +7,8 @@ namespace TracerLib.Tracers
 {
     public class MethodTracer
     {
-        public Stopwatch Stopwatch { get; set; } = new ();
+        public Stopwatch Stopwatch { get; } = new ();
         public ConcurrentStack<MethodInfo> Methods { get; } = new ();
-
-        public void StartTrace()
-        {
-            Stopwatch.Start();
-        }
-
-        public void StopTrace()
-        {
-            Stopwatch.Stop();
-        }
 
         public void AddMethod(MethodInfo methodInfo)
         {
