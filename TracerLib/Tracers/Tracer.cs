@@ -1,22 +1,21 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Diagnostics;
+﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using TracerLib.Models;
 
 namespace TracerLib.Tracers
 {
-    public class Tracer : ITracer
+    public class Tracer : IMainTracer
     {
-        private readonly ConcurrentDictionary<int, ThreadTracer> _threadsTrace = new ();
+        public ConcurrentDictionary<int, IThreadTracer> ThreadsTracers { get; } = new();
 
         public void StartTrace()
         {
             var threadId = Thread.CurrentThread.ManagedThreadId;
-            if (!_threadsTrace.TryGetValue(threadId, out var threadTrace))
+            if (!ThreadsTracers.TryGetValue(threadId, out var threadTrace))
             {
-                threadTrace = _threadsTrace.GetOrAdd(threadId, new ThreadTracer());
+                threadTrace = ThreadsTracers.GetOrAdd(threadId, new ThreadTracer() { Id = threadId });
             }
             threadTrace.StartTrace();
         }
@@ -24,26 +23,18 @@ namespace TracerLib.Tracers
         public void StopTrace()
         {
             var threadId = Thread.CurrentThread.ManagedThreadId;
-            if (_threadsTrace.TryGetValue(threadId, out var threadTrace))
+            if (ThreadsTracers.TryGetValue(threadId, out var threadTrace))
             {
-                threadTrace.StopTrace(new StackTrace().GetFrame(1));
+                threadTrace.StopTrace();
             }
         }
 
-        public TraceResult GetTraceResult()
+        public ITraceResult GetTraceResult()
         {
-            var traceResult = new TraceResult();
-            foreach (var (id, value) in _threadsTrace)
+            return new TraceResult()
             {
-                var threadInfo = new ThreadInfo
-                {
-                    Id = id,
-                    Methods = value.MethodsInfo.ToList()
-                };
-                traceResult.ThreadsInfo.Add(threadInfo);
-            }
-            return traceResult;
+                ThreadsInfo = ThreadsTracers.Select(pair => pair.Value.GetTraceResult() as ThreadInfo).ToList()
+            };
         }
-        
     }
 }

@@ -1,4 +1,5 @@
-﻿using TracerLib.Models;
+﻿using System.Collections.Generic;
+using TracerLib.Models;
 
 namespace TracerLib.Tracers
 {
@@ -8,6 +9,6 @@ namespace TracerLib.Tracers
 
         void StopTrace();
 
-        TraceResult GetTraceResult();
+        ITraceResult GetTraceResult();
     }
 }

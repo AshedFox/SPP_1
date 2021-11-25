@@ -5,7 +5,7 @@ using System.Xml.Serialization;
 namespace TracerLib.Models
 {
     [Serializable]
-    public record MethodInfo
+    public record MethodInfo : ITraceResult
     {
         [XmlAttribute]
         public string Name { get; init; }

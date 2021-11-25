@@ -1,18 +1,33 @@
 ﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Diagnostics;
-using System.Reflection;
-using MethodInfo = TracerLib.Models.MethodInfo;
+using System.Linq;
+using TracerLib.Models;
 
 namespace TracerLib.Tracers
 {
-    public class MethodTracer
+    public class MethodTracer : IMethodTracer
     {
         public Stopwatch Stopwatch { get; } = new ();
-        public ConcurrentStack<MethodInfo> Methods { get; } = new ();
+        public ConcurrentStack<MethodInfo> Methods { get; } = new();
 
-        public void AddMethod(MethodInfo methodInfo)
+        public void StartTrace()
         {
-            Methods.Push(methodInfo);
+            Stopwatch.Start();
+        }
+
+        public void StopTrace()
+        {
+            Stopwatch.Stop();
+        }
+
+        public ITraceResult GetTraceResult()
+        {
+            return new MethodInfo()
+            {
+                ElapsedMilliseconds = Stopwatch.ElapsedMilliseconds,
+                Methods = Methods.ToList()
+            };
         }
     }
 }

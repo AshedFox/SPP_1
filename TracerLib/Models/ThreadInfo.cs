@@ -5,7 +5,7 @@ using System.Xml.Serialization;
 namespace TracerLib.Models
 {
     [Serializable]
-    public class ThreadInfo
+    public record ThreadInfo : ITraceResult
     {
         [XmlAttribute]
         public int Id { get; init; }

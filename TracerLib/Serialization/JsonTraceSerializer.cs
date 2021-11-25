@@ -8,14 +8,9 @@ namespace TracerLib.Serialization
 {
     public class JsonTraceSerializer : ITraceSerializer
     {
-        public string Serialize(TraceResult traceResult)
+        public string Serialize(ITraceResult traceResult)
         { 
             return JsonConvert.SerializeObject(traceResult, Formatting.Indented);
-        }
-
-        public TraceResult Deserialize(string traceResult)
-        {
-            return JsonConvert.DeserializeObject<TraceResult>(traceResult);
         }
     }
 }
